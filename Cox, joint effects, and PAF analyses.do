@@ -1,51 +1,27 @@
 ///Time-varying Cox analysis
-stset follow_death, failure(death_HES == 1)
 local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years
-stcox i.LPA_self_4 `covariates3', tvc(age_accel i.season_wear history_cancer_CVD)
+stset follow_death, failure(death_HES==1)
+foreach v of varlist LPA_self_4 MPA_self_4 VPA_self_4 MVPA_self_4 {
+       stcox i.`v' `covariates3', tvc(age_accel i.season_wear history_cancer_CVD)  
+	   est store `v'_3
+	   esttab `v'_3 using Timevarying_HES.rtf, title("`v'") eform ci(2) wide nostar b(%9.2f) keep(*.`v') append
+}
 
-stset follow_death, failure(death_HES == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years
-stcox i.MPA_self_4 `covariates3', tvc(age_accel i.season_wear history_cancer_CVD)
+local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit history_cancer_CVD self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years
+stset follow_death, failure(death_cancer==1)
+foreach v of varlist LPA_self_4 MPA_self_4 VPA_self_4 MVPA_self_4 {
+       stcox i.`v' `covariates3', tvc(age_accel i.season_wear)  
+	   est store `v'_3
+	   esttab `v'_3 using Timevarying_cancer.rtf, title("`v'") eform ci(2) wide nostar b(%9.2f) keep(*.`v') append
+}
 
-stset follow_death, failure(death_HES == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years
-stcox i.VPA_self_4 `covariates3', tvc(age_accel i.season_wear history_cancer_CVD)
-
-stset follow_death, failure(death_HES == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years i.season_wear 
-stcox i.MVPA_self_4 `covariates3', tvc(age_accel history_cancer_CVD)
-
-stset follow_death, failure(death_cancer == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years 
-stcox i.LPA_self_4 `covariates3', tvc(age_accel history_cancer_CVD i.season_wear)
-
-stset follow_death, failure(death_cancer == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years 
-stcox i.MPA_self_4 `covariates3', tvc(age_accel history_cancer_CVD i.season_wear)
-
-stset follow_death, failure(death_cancer == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years 
-stcox i.VPA_self_4 `covariates3', tvc(age_accel history_cancer_CVD i.season_wear)
-
-stset follow_death, failure(death_cancer == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years 
-stcox i.MVPA_self_4 `covariates3', tvc(age_accel history_cancer_CVD i.season_wear)
-
-stset follow_death, failure(death_CVD == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years i.season_wear
-stcox i.LPA_self_4 `covariates3', tvc(age_accel history_cancer_CVD)
-
-stset follow_death, failure(death_CVD == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years i.season_wear
-stcox i.MPA_self_4 `covariates3', tvc(age_accel history_cancer_CVD)
-
-stset follow_death, failure(death_CVD == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years i.season_wear
-stcox i.VPA_self_4 `covariates3', tvc(age_accel history_cancer_CVD)
-
-stset follow_death, failure(death_CVD == 1)
-local covariates3 sex new_ethnic i.qualification duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years i.season_wear
-stcox i.MVPA_self_4 `covariates3', tvc(age_accel history_cancer_CVD)
+local covariates3 age_accel sex new_ethnic i.qualification i.season_wear duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit history_cancer_CVD self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years
+stset follow_death, failure(death_CVD==1)
+foreach v of varlist LPA_self_4 MPA_self_4 VPA_self_4 MVPA_self_4 {
+       stcox i.`v' `covariates3'
+	   est store `v'_3
+	   esttab `v'_3 using CVD.rtf, title("`v'") eform ci(2) wide nostar b(%9.2f) keep(*.`v') append
+}
 
 ///Analyses for joint effects of different intensities of PA
 local covariates3 age_accel sex new_ethnic i.qualification i.season_wear duration_wear i.smoke alcohol_unit i.diet_score sleep_score1 diabetes_duration BMI wasit history_cancer_CVD self_hypertension i.health_self i.long_illness_injury i.illness_injury_2years
